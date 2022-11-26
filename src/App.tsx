@@ -2,6 +2,7 @@ import { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Outlet } from "react-router-dom";
+import RequestTable from "./components/RequestTable";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 // import Table from './components/Table';
@@ -12,8 +13,8 @@ const route = [
     element: <div>Hello</div>,
   },
   {
-    path: "b",
-    element: <div>World</div>,
+    path: "request/:page",
+    element: <RequestTable />,
   },
   {
     path: "login",
