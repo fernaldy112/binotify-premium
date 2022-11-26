@@ -1,12 +1,17 @@
 interface ButtonProps {
   text: string;
+  className?: string;
   onClick?: () => void;
 }
 
-export default function Button({ text, onClick }: ButtonProps) {
+export default function Button({ text, onClick, className }: ButtonProps) {
   function handleClick() {
     if (onClick) onClick();
   }
 
-  return <button onClick={handleClick}>{text}</button>;
+  return (
+    <button className={className} onClick={handleClick}>
+      {text}
+    </button>
+  );
 }
