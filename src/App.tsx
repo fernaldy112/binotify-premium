@@ -2,6 +2,8 @@ import { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Outlet } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 // import Table from './components/Table';
 
 const route = [
@@ -12,6 +14,14 @@ const route = [
   {
     path: "b",
     element: <div>World</div>,
+  },
+  {
+    path: "login",
+    element: <LoginForm />,
+  },
+  {
+    path: "register",
+    element: <RegisterForm />,
   },
 ];
 

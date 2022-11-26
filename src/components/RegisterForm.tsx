@@ -3,7 +3,7 @@ import LoginRedirect from './LoginRedirect.js'
 
 const RegisterForm = () => {
   return (
-    <div className='h-screen w-full max-w-xl flex flex-col justify-center mx-auto'>
+    <div className='w-full max-w-xl flex flex-col justify-center mx-auto my-10'>
         <div className='border-2 border-black rounded-lg'>
             <form id="registerForm" className='p-10 flex flex-col items-center justify-items-stretch pb-6' action="">
                 <h2 className='w-full mx-auto text-center text-5xl font-bold mb-10'>Binotify Premium</h2>
