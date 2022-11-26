@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import Table, { Displayable } from "./Table";
+import { ReactNode, useEffect, useState } from "react";
+import Table from "./Table";
 
 interface RequestTableProps {
   params?: {
@@ -8,7 +8,7 @@ interface RequestTableProps {
 }
 
 export default function RequestTable({ params }: RequestTableProps) {
-  const [data, setData] = useState<Displayable[][] | null>(null);
+  const [data, setData] = useState<ReactNode[][] | null>(null);
   const [error, setError] = useState(null);
 
   const headers = ["Creator ID", "Subscriber ID", ""];
@@ -19,7 +19,7 @@ export default function RequestTable({ params }: RequestTableProps) {
       .then((res) => res.json())
       .then(
         (res: any[]) => {
-          const data = res.map<Displayable[]>((row) => [
+          const data = res.map<ReactNode[]>((row) => [
             row.creatorId,
             row.subscriberId,
             // TODO: add accept/reject buttons
