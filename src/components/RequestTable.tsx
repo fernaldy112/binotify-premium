@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
+import Button from "./Button";
 import Table from "./Table";
 
 interface RequestTableProps {
@@ -7,11 +8,34 @@ interface RequestTableProps {
   };
 }
 
+enum Status {
+  ACCEPTED,
+  REJECTED,
+}
+
 export default function RequestTable({ params }: RequestTableProps) {
   const [data, setData] = useState<ReactNode[][] | null>(null);
   const [error, setError] = useState(null);
 
   const headers = ["Creator ID", "Subscriber ID", ""];
+
+  function update(creatorId: number, subscriberId: number, status: Status) {
+    const xhr = new XMLHttpRequest();
+    const API_URL = import.meta.env.VITE_API_URL;
+    const endpoint = status == Status.ACCEPTED ? "accept" : "reject";
+    xhr.open("POST", `${API_URL}/subscriptions/${endpoint}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = () => {
+      // TODO: handle response
+    };
+
+    xhr.send(
+      JSON.stringify({
+        creatorId,
+        subscriberId,
+      })
+    );
+  }
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -22,7 +46,18 @@ export default function RequestTable({ params }: RequestTableProps) {
           const data = res.map<ReactNode[]>((row) => [
             row.creatorId,
             row.subscriberId,
-            // TODO: add accept/reject buttons
+            <Button
+              text="Accept"
+              onClick={() => {
+                update(row.creatorId, row.subscriberId, Status.ACCEPTED);
+              }}
+            ></Button>,
+            <Button
+              text="Reject"
+              onClick={() => {
+                update(row.creatorId, row.subscriberId, Status.REJECTED);
+              }}
+            ></Button>,
           ]);
           setData(data);
         },
