@@ -2,6 +2,7 @@ import { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Outlet } from "react-router-dom";
+import RequestTable from "./components/RequestTable";
 // import Table from './components/Table';
 
 const route = [
@@ -10,8 +11,8 @@ const route = [
     element: <div>Hello</div>,
   },
   {
-    path: "b",
-    element: <div>World</div>,
+    path: "request/:page",
+    element: <RequestTable />,
   },
 ];
 
