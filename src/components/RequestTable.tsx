@@ -8,6 +8,12 @@ interface RequestTableProps {
   };
 }
 
+interface SubscriptionResponse {
+  firstPage: boolean;
+  lastPage: boolean;
+  subscriptions: any[];
+}
+
 enum Status {
   ACCEPTED,
   REJECTED,
@@ -16,6 +22,8 @@ enum Status {
 export default function RequestTable({ params }: RequestTableProps) {
   const [data, setData] = useState<ReactNode[][] | null>(null);
   const [error, setError] = useState(null);
+  const [isFirstPage, setIsFirstPage] = useState(false);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   const headers = ["Creator ID", "Subscriber ID", ""];
 
@@ -39,11 +47,14 @@ export default function RequestTable({ params }: RequestTableProps) {
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL;
-    fetch(`${API_URL}/subscriptions`)
+    fetch(`${API_URL}/subscriptions?page=${params?.page || 1}`)
       .then((res) => res.json())
       .then(
-        (res: any[]) => {
-          const data = res.map<ReactNode[]>((row) => [
+        (res: SubscriptionResponse) => {
+          const { firstPage, lastPage, subscriptions } = res;
+          setIsFirstPage(firstPage);
+          setIsLastPage(lastPage);
+          const data = subscriptions.map<ReactNode[]>((row) => [
             row.creatorId,
             row.subscriberId,
             <Button
@@ -66,6 +77,8 @@ export default function RequestTable({ params }: RequestTableProps) {
         }
       );
   }, []);
+
+  // TODO: Add pagination buttons
 
   if (error) {
     return <div>Error</div>;
