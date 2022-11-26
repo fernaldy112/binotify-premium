@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <header className="fixed top-0 border-b-1 border-solid border-primary w-full box-border flex justify-between items-center px-8 py-4 text-white">
       <nav className="flex gap-8">
-        <Link to="">Requests</Link>
+        <Link to="/request/1">Requests</Link>
         <Link to="">My Music</Link>
       </nav>
       <div className="flex gap-4">

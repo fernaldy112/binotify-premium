@@ -30,7 +30,9 @@ function App() {
   return (
     <>
       <Header></Header>
-      <Outlet />
+      <div className="mt-28 flex items-center flex-col text-white">
+        <Outlet />
+      </div>
     </>
   );
 }
