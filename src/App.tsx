@@ -4,6 +4,8 @@ import "./App.css";
 import { Outlet } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
+import SongPage from "./components/Song";
+import ManageSong from "./components/List";
 // import Table from './components/Table';
 
 const route = [
@@ -22,6 +24,14 @@ const route = [
   {
     path: "register",
     element: <RegisterForm />,
+  },
+  {
+    path: "addSong",
+    element: <SongPage />,
+  },
+  {
+    path: "manageSong",
+    element: <ManageSong />,
   },
 ];
 
