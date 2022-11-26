@@ -1,14 +1,12 @@
 import { ReactNode } from "react";
 
-export type Displayable = string | number | ReactNode;
-
 interface TableProps {
   headers: string[];
-  data: Displayable[][];
+  data: ReactNode[][];
 }
 
 interface TableRowProps {
-  data: Displayable[];
+  data: ReactNode[];
 }
 
 function TableRow({ data }: TableRowProps) {
