@@ -5,7 +5,7 @@ import Button from "./Button";
 // TODO: conditional render based on auth
 export default function Header() {
   return (
-    <header className="fixed top-0 border-b-1 border-solid border-primary w-full box-border flex justify-between items-center px-8 py-4 text-white">
+    <header className="z-30 bg-graybg fixed top-0 border-b-1 border-solid border-primary w-full box-border flex justify-between items-center px-8 py-4 text-white">
       <nav className="flex gap-8">
         <Link to="/request/1">Requests</Link>
         <Link to="">My Music</Link>
