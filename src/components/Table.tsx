@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import "./table.css";
 
 interface TableProps {
   headers: string[];
@@ -12,8 +13,8 @@ interface TableRowProps {
 function TableRow({ data }: TableRowProps) {
   return (
     <tr>
-      {data.map((cell) => (
-        <td>{cell}</td>
+      {data.map((cell, index) => (
+        <td key={index}>{cell}</td>
       ))}
     </tr>
   );
@@ -27,13 +28,13 @@ export default function Table(props: TableProps) {
       <thead>
         <tr>
           {headers.map((header) => (
-            <th>{header}</th>
+            <th key={header}>{header}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {data.map((row) => (
-          <TableRow data={row} />
+        {data.map((row, index) => (
+          <TableRow key={index} data={row} />
         ))}
       </tbody>
     </table>
