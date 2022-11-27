@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "./Button";
 import Table from "./Table";
 
@@ -19,11 +20,13 @@ enum Status {
   REJECTED,
 }
 
-export default function RequestTable({ params }: RequestTableProps) {
+export default function RequestTable() {
   const [data, setData] = useState<ReactNode[][] | null>(null);
   const [error, setError] = useState(null);
   const [isFirstPage, setIsFirstPage] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
+  const params = useParams();
+  const navigate = useNavigate();
   let dataMirror: ReactNode[][] | null = null;
 
   const headers = ["Creator ID", "Subscriber ID", ""];
@@ -80,6 +83,16 @@ export default function RequestTable({ params }: RequestTableProps) {
     );
   }
 
+  function next() {
+    const page = +(params?.page || 1);
+    navigate(`/request/${page + 1}`, { replace: true });
+  }
+
+  function prev() {
+    const page = +(params?.page || 1);
+    navigate(`/request/${page - 1}`, { replace: true });
+  }
+
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL;
     fetch(`${API_URL}/subscriptions?page=${params?.page || 1}`)
@@ -116,7 +129,7 @@ export default function RequestTable({ params }: RequestTableProps) {
           setError(err);
         }
       );
-  }, []);
+  }, [params]);
 
   useEffect(() => {
     dataMirror = data;
@@ -127,6 +140,27 @@ export default function RequestTable({ params }: RequestTableProps) {
   } else if (!data) {
     return <div>Loading...</div>;
   } else {
-    return <Table headers={headers} data={data} />;
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-between items-center w-full">
+          {!isFirstPage && (
+            <Button
+              className="hover:text-primary transition-all ease-out duration-150 material-symbols-rounded"
+              text="chevron_left"
+              onClick={prev}
+            />
+          )}
+          <div></div>
+          {!isLastPage && (
+            <Button
+              className="hover:text-primary transition-all ease-out duration-150 material-symbols-rounded"
+              text="chevron_right"
+              onClick={next}
+            />
+          )}
+        </div>
+        <Table headers={headers} data={data} />
+      </div>
+    );
   }
 }
