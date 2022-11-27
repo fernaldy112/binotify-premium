@@ -10,6 +10,9 @@ const LoginForm = () => {
     const [credential, setCredential] = useState("");
     const [password, setPassword] = useState("");
 
+    const [loginErrorExists, setLoginErrorExists] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+
     const credInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCredential(event.target.value);
     }
@@ -33,14 +36,18 @@ const LoginForm = () => {
         .then(function (response) {
             const res = response.data;
             if (res.valid){
-                // TODO
+                setLoginErrorExists(false);
+                setErrorMsg("");
+                // TODO: redirect, keep session?
             } else {
-                // TODO
+                setLoginErrorExists(true);
+                setErrorMsg(res.note);
             }
         })
         .catch(function (error) {
-            console.log(error);
-            // TODO
+            // console.log(error);
+            setLoginErrorExists(true);
+            setErrorMsg("Something wrong with the server");
         });
     }
 
@@ -49,6 +56,7 @@ const LoginForm = () => {
             <div className='border-2 border-black rounded-lg'>
                 <form id="loginForm" className='p-10 flex flex-col items-center justify-items-stretch pb-6' onSubmit={loginHandler} method="post">
                     <h2 className='w-full mx-auto text-center text-5xl font-bold mb-10'>Binotify Premium</h2>
+                    <p className={`${(loginErrorExists) ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4" : ""}`}>{errorMsg}</p>
                     <div className='w-full'>
                         <label htmlFor="loginCred" className='w-full text-left block'>Email/Username</label>
                         <input id="loginCred" name='loginCred' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="text" placeholder='Enter your email/username' onChange={credInputHandler}/>
