@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useState } from 'react'
-import ManageSong from "./List";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
-
 
 
 const SongPage = () => {
     const [file, setFile] = useState<File>();
+    const [songErrorExists, setSongErrorExists] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+
 
     const [formData, setFormData] = useState({
         Title: "",
@@ -49,8 +49,7 @@ const SongPage = () => {
 
     function handleSubmit(e) {
         e.preventDefault();
-        alert("Add new song?");
-        // TODO: Masukkan ke DB
+        alert("New Song will be added");
         const songData = {
             Title: formData.Title,
             singer_id: formData.singer_id,
@@ -58,24 +57,21 @@ const SongPage = () => {
         }
         axios({
             method: "post",
-            url: "http://localhost:8080/login",
-            data: loginData,
+            url: "http://localhost:8081/song",
+            data: songData,
             headers: { "Content-Type": "application/json" },
         })
             .then(function (response) {
                 const res = response.data;
                 if (res.valid) {
-                    setLoginErrorExists(false);
                     setErrorMsg("");
-                    // TODO: redirect, keep session?
                 } else {
-                    setLoginErrorExists(true);
                     setErrorMsg(res.note);
                 }
             })
             .catch(function (error) {
                 // console.log(error);
-                setLoginErrorExists(true);
+                setSongErrorExists(true);
                 setErrorMsg("Something wrong with the server");
             });
 
@@ -85,8 +81,9 @@ const SongPage = () => {
     return (
         <div className='w-full max-w-xl flex flex-col justify-center mx-auto my-10'>
             <div className='border-2 border-black rounded-lg'>
-                <form id="insertSongForm" onSubmit={handleSubmit} className='p-10 flex flex-col items-center justify-items-stretch pb-6' action="" onSubmit={handleSubmit}>
+                <form id="insertSongForm" onSubmit={handleSubmit} className='p-10 flex flex-col items-center justify-items-stretch pb-6' action="" method="post">
                     <h2 className='w-full mx-auto text-center text-5xl font-bold mb-10'>Song</h2>
+                    <p className={`${(songErrorExists) ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4" : ""}`}>{errorMsg}</p>
                     <div className='w-full'>
                         <label htmlFor="songTitle" className='w-full text-left block'>Title</label>
                         <input id="songTitle" name="Title" className='border-2 rounded-lg border-black p-1 w-full mb-8' value={formData.Title} onChange={handleChange} type=" text" placeholder='Enter song Title' />
