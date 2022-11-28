@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import LoginRedirect from './LoginRedirect.js'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
+import TokenStore from "./store/token"
 
 const RegisterForm = () => {
 
@@ -74,7 +75,8 @@ const RegisterForm = () => {
                 setErrorMsg("");
 
                 if (status === 200){
-                    // TODO: save token, redirect
+                    TokenStore.set(data.token);
+                    navigate('/a');
                 }
             })
             .catch(function (error) {
