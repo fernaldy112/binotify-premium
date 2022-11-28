@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import token from "./store/token";
 
-// TODO: add hrefs (remaining "My Music")
 export default function Header() {
   const navigate = useNavigate();
 
@@ -34,12 +33,19 @@ export default function Header() {
     </>
   );
 
+  const navs = token.exists() ? (
+    token.isAdmin() ? (
+      <Link to="/request/1">Requests</Link>
+    ) : (
+      <Link to="/music">My Music</Link>
+    )
+  ) : (
+    <></>
+  );
+
   return (
     <header className="z-30 bg-graybg fixed top-0 border-b-1 border-solid border-primary w-full box-border flex justify-between items-center px-8 py-4 text-white">
-      <nav className="flex gap-8">
-        <Link to="/request/1">Requests</Link>
-        <Link to="">My Music</Link>
-      </nav>
+      <nav className="flex gap-8">{navs}</nav>
       <div className="flex gap-4">{buttons}</div>
     </header>
   );
