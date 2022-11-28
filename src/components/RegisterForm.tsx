@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import LoginRedirect from './LoginRedirect.js'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
+import TokenStore from "./store/token"
 
 const RegisterForm = () => {
 
@@ -59,43 +60,47 @@ const RegisterForm = () => {
             }
             axios({
                 method: "post",
-                url: "http://localhost:8080/login",
+                url: "http://localhost:8081/register",
                 data: registerData,
                 headers: { "Content-Type": "application/json" },
             })
             .then(function (response) {
-                const res = response.data;
-                if (res.valid){
-                    setEmailErrorExists(false);
-                    setUsernameErrorExists(false);
-                    setPasswordErrorExists(false);
-                    setServerErrorExists(false);
-                    setErrorMsg("");
-                    // TODO: redirect, keep session?
-                } else {
-                    setEmailErrorExists(false);
-                    setUsernameErrorExists(false);
-                    setPasswordErrorExists(false);
-                    setServerErrorExists(false);
-                    setErrorMsg(res.note);
-                    if (res.note === "Username already exists"){
-                        setUsernameErrorExists(true);
-                    } else if (res.note === "Email already exists"){
-                        setEmailErrorExists(true);
-                    } else if (res.note === "Confirm password doesn't match"){
-                        setPasswordErrorExists(true);
-                    } else if (res.note === "Something wrong with the server"){
-                        setServerErrorExists(true);
-                    }
+                const status = response.status;
+                const data = response.data;
+
+                setEmailErrorExists(false);
+                setUsernameErrorExists(false);
+                setPasswordErrorExists(false);
+                setServerErrorExists(false);
+                setErrorMsg("");
+
+                if (status === 200){
+                    TokenStore.set(data.token);
+                    navigate('/a');
                 }
             })
             .catch(function (error) {
                 // console.log(error);
+                const status = error.response.status;
+                const data = error.response.data;
                 setEmailErrorExists(false);
                 setUsernameErrorExists(false);
                 setPasswordErrorExists(false);
-                setServerErrorExists(true);
-                setErrorMsg("Something wrong with the server");
+                setServerErrorExists(false);
+                setErrorMsg("");
+                if (status === 401){
+                    setErrorMsg(data.note);
+                    if (data.note === "Username already exists"){
+                        setUsernameErrorExists(true);
+                    } else if (data.note === "Email already exists"){
+                        setEmailErrorExists(true);
+                    } else if (data.note === "Confirm password doesn't match"){
+                        setPasswordErrorExists(true);
+                    } 
+                } else if (status === 500){
+                    setServerErrorExists(true);
+                    setErrorMsg("Something wrong with the server");
+                }
             });
         } else if (validEmail && !validUsername) {
             setErrorMsg("Invalid username format");
@@ -126,23 +131,23 @@ const RegisterForm = () => {
                     <p className={`${(emailErrorExists || usernameErrorExists || passwordErrorExists || serverErrorExists) ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4" : ""}`}>{errorMsg}</p>
                     <div className='w-full'>
                         <label htmlFor="registerName" className='w-full text-left block'>Name</label>
-                        <input id="registerName" name='registerName' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="text" placeholder='Enter your name' onChange={nameInputHandler}/>
+                        <input id="registerName" name='registerName' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="text" placeholder='Enter your name' onChange={nameInputHandler} value={name}/>
                     </div>
                     <div className='w-full'>
                         <label htmlFor="registerUsername" className='w-full text-left block'>Username</label>
-                        <input id="registerUsername" name='registerUsername' className={`border-2 rounded-lg p-1 w-full mb-8 ${usernameErrorExists ? "border-rose-600" : "border-black"}`} type="text" placeholder='Enter your username' onChange={usernameInputHandler}/>
+                        <input id="registerUsername" name='registerUsername' className={`border-2 rounded-lg p-1 w-full mb-8 ${usernameErrorExists ? "border-rose-600" : "border-black"}`} type="text" placeholder='Enter your username' onChange={usernameInputHandler} value={username}/>
                     </div>
                     <div className='w-full'>
                         <label htmlFor="registerEmail" className='w-full text-left block'>Email</label>
-                        <input id="registerEmail" name='registerEmail' className={`border-2 rounded-lg p-1 w-full mb-8 ${emailErrorExists ? "border-rose-600" : "border-black"}`} type="text" placeholder='Enter your email' onChange={emailInputHandler}/>
+                        <input id="registerEmail" name='registerEmail' className={`border-2 rounded-lg p-1 w-full mb-8 ${emailErrorExists ? "border-rose-600" : "border-black"}`} type="text" placeholder='Enter your email' onChange={emailInputHandler} value={email}/>
                     </div>
                     <div className='w-full'>
                         <label htmlFor="registerPass" className='w-full text-left block'>Password</label>
-                        <input id="registerPass" name='registerPass' className={`border-2 rounded-lg p-1 w-full mb-8 ${passwordErrorExists ? "border-rose-600" : "border-black"}`} type="password" placeholder='Enter your password' onChange={passwordInputHandler}/>
+                        <input id="registerPass" name='registerPass' className={`border-2 rounded-lg p-1 w-full mb-8 ${passwordErrorExists ? "border-rose-600" : "border-black"}`} type="password" placeholder='Enter your password' onChange={passwordInputHandler} value={password}/>
                     </div>
                     <div className='w-full'>
                         <label htmlFor="registerPass2" className='w-full text-left block'>Confirm Password</label>
-                        <input id="registerPass2" name='registerPass2' className={`border-2 rounded-lg p-1 w-full mb-8 ${passwordErrorExists ? "border-rose-600" : "border-black"}`} type="password" placeholder='Confirm your password' onChange={password2InputHandler}/>
+                        <input id="registerPass2" name='registerPass2' className={`border-2 rounded-lg p-1 w-full mb-8 ${passwordErrorExists ? "border-rose-600" : "border-black"}`} type="password" placeholder='Confirm your password' onChange={password2InputHandler} value={password2}/>
                     </div>
                     <button className='border-2 rounded-lg border-black p-1 w-full max-w-[100px]' type='submit'>Sign up</button>
                 </form>

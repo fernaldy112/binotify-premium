@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import RegisterRedirect from './RegisterRedirect'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
+import TokenStore from "./store/token"
 
 const LoginForm = () => {
 
@@ -29,25 +30,30 @@ const LoginForm = () => {
         }
         axios({
             method: "post",
-            url: "http://localhost:8080/login",
+            url: "http://localhost:8081/login",
             data: loginData,
             headers: { "Content-Type": "application/json" },
           })
         .then(function (response) {
-            const res = response.data;
-            if (res.valid){
+            const status = response.status;
+            const data = response.data;
+            if (status === 200){
                 setLoginErrorExists(false);
                 setErrorMsg("");
-                // TODO: redirect, keep session?
-            } else {
-                setLoginErrorExists(true);
-                setErrorMsg(res.note);
-            }
+                TokenStore.set(data.token);
+                navigate('/a');
+            } 
         })
         .catch(function (error) {
             // console.log(error);
+            const status = error.response.status;
+            const data = error.response.data;
             setLoginErrorExists(true);
-            setErrorMsg("Something wrong with the server");
+            if (status === 401){
+                setErrorMsg("Invalid credential");
+            } else if (status === 500){
+                setErrorMsg("Something wrong with the server");
+            }
         });
     }
 
@@ -59,11 +65,11 @@ const LoginForm = () => {
                     <p className={`${(loginErrorExists) ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4" : ""}`}>{errorMsg}</p>
                     <div className='w-full'>
                         <label htmlFor="loginCred" className='w-full text-left block'>Email/Username</label>
-                        <input id="loginCred" name='loginCred' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="text" placeholder='Enter your email/username' onChange={credInputHandler}/>
+                        <input id="loginCred" name='loginCred' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="text" placeholder='Enter your email/username' onChange={credInputHandler} value={credential}/>
                     </div>
                     <div className='w-full'>
                         <label htmlFor="loginPass" className='w-full text-left block'>Password</label>
-                        <input id="loginPass" name='loginPass' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="password" placeholder='Enter your password' onChange={passInputHandler}/>
+                        <input id="loginPass" name='loginPass' className='border-2 rounded-lg border-black p-1 w-full mb-8' type="password" placeholder='Enter your password' onChange={passInputHandler} value={password}/>
                     </div>
                     <button className='border-2 rounded-lg border-black p-1 w-full max-w-[100px]' type='submit'>Login</button>
                 </form>
@@ -74,4 +80,4 @@ const LoginForm = () => {
     )
 }
 
-export default LoginForm
+export default LoginForm;
