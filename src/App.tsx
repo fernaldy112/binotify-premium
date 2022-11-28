@@ -23,6 +23,10 @@ const route = [
     path: "register",
     element: <RegisterForm />,
   },
+  {
+    path: "music",
+    element: <></>,
+  },
 ];
 
 function App() {

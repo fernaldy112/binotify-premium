@@ -1,5 +1,6 @@
 const token = {
   value: "",
+  admin: false,
   set(newToken: string) {
     this.value = newToken;
   },
@@ -8,6 +9,12 @@ const token = {
   },
   exists() {
     return this.value !== "";
+  },
+  setAdmin(admin: boolean) {
+    this.admin = admin;
+  },
+  isAdmin() {
+    return this.admin;
   },
 };
 
