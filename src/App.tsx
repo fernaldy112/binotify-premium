@@ -30,16 +30,16 @@ const route = [
     path: "music",
     element: <SongPage />,
   },
-  // {
-  //   path: "music",
-  //   element: <ManageSong />,
-  // },
+  {
+    path: "my-music",
+    element: <ManageSong />,
+  },
 ];
 
 function App() {
   return (
     <>
-      <Header></Header>
+      <Header />
       <div className="mt-28 flex items-center flex-col text-white">
         <Outlet />
       </div>

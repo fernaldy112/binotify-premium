@@ -37,7 +37,10 @@ export default function Header() {
     token.isAdmin() ? (
       <Link to="/request/1">Requests</Link>
     ) : (
-      <Link to="/music">My Music</Link>
+      <>
+        <Link to="/my-music">My Music</Link>
+        <Link to="/music">New Music</Link>
+      </>
     )
   ) : (
     <></>

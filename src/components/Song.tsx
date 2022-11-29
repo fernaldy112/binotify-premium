@@ -15,7 +15,7 @@ const SongPage = () => {
 
   function handleChange(e: any) {
     let data = { ...formData };
-    data[e.target.name] = e.target.value;
+    data[e.target.name as keyof typeof data] = e.target.value;
     setFormData(data);
   }
 
@@ -46,11 +46,6 @@ const SongPage = () => {
   function handleSubmit(e: any) {
     e.preventDefault();
     alert("New Song will be added");
-    const songData = {
-      judul: formData.judul,
-      singer_id: formData.singer_id,
-      audio_path: file,
-    };
     const data = new FormData();
     data.append("judul", formData.judul);
     data.append("audioFile", file!);
