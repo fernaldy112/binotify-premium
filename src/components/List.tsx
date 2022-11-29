@@ -1,26 +1,31 @@
-import React, { ChangeEvent, useState, useEffect, useMemo } from "react";
+import React, { ChangeEvent, useState, useEffect, useMemo, ReactNode } from "react";
 import Pagination from './Pagination';
 import axios from "axios";
+import token from "./store/token";
 
-let PageSize = 10;
+let PageSize = 5;
 
 export default function ManageSong() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
+    let dataMirror: ReactNode[][] | null = null;
 
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:8081/song`
-                );
+                const response = await axios.get(`http://localhost:8081/song`, {
+                    headers: {
+                        Authorization: `Bearer ${token.value}`,
+                    },
+                });
                 setData(response.data);
+                dataMirror = response.data;
                 setError(null);
                 console.log(data);
-            } catch (err) {
-                setError(err.message);
+            } catch (error: any) {
+                setError(error.message);
                 setData(null);
             } finally {
                 setLoading(false);
@@ -31,26 +36,56 @@ export default function ManageSong() {
     // const [data, setData] = useState([
     //     // TODO: READ DATA DARI DB
     //     {
-    //         id: 1,
+    //         song_id: 1,
     //         Title: "Anjay",
     //         Singer_id: 10,
     //         audio_path: "hehe",
     //     },
     //     {
-    //         id: 2,
+    //         song_id: 2,
     //         Title: "Turu",
     //         Singer_id: 1,
     //         audio_path: "hehe",
     //     },
+    //     {
+    //         song_id: 2,
+    //         Title: "Turu",
+    //         Singer_id: 1,
+    //         audio_path: "hehe",
+    //     },
+    //     {
+    //         song_id: 2,
+    //         Title: "Turu",
+    //         Singer_id: 1,
+    //         audio_path: "hehe",
+    //     },
+    //     {
+    //         song_id: 2,
+    //         Title: "Turu",
+    //         Singer_id: 1,
+    //         audio_path: "hehe",
+    //     },
+    //     {
+    //         song_id: 2,
+    //         Title: "Turu",
+    //         Singer_id: 1,
+    //         audio_path: "hehe",
+    //     },
+    //     {
+    //         song_id: 2,
+    //         Title: "Turu",
+    //         Singer_id: 1,
+    //         audio_path: "hehe",
+    //     },
+
     // ])
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const currentTableData = useMemo(() => {
-        const firstPageIndex = (currentPage - 1) * PageSize;
-        const lastPageIndex = firstPageIndex + PageSize;
-        return data.slice(firstPageIndex, lastPageIndex);
-    }, [currentPage]);
+    const firstPageIndex = (currentPage - 1) * PageSize;
+    const lastPageIndex = firstPageIndex + PageSize;
+    const currentTableData = data ? data!.slice(firstPageIndex, lastPageIndex) : [];
+
 
     const [file, setFile] = useState<File>();
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +120,7 @@ export default function ManageSong() {
     })
 
 
-    function handleSave(e) {
+    function handleSave(e: any, value) {
         // let tes = [...data];
         // tes.push({ id: 10, Title: formData.Title, Singer_id: 11, audio_path: file.name });
         // setData(tes);
@@ -110,13 +145,14 @@ export default function ManageSong() {
         alert("Song will be edited");
         const songData = {
             judul: formData.Title,
-            audio_path: file.name
+            audio_path: file
         }
+        console.log(songData);
         axios({
             method: "put",
             url: `http://localhost:8081/song/${value}`,
             data: songData,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.value}` },
         })
             .then(function (response) {
                 const res = response.data;
@@ -143,11 +179,11 @@ export default function ManageSong() {
 
     function handleDelete(value) {
         // TODO: DELETE DARI DB
-
+        console.log(value);
         axios({
             method: "delete",
             url: `http://localhost:8081/song/${value}`,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.value}` },
         })
             .then(function (response) {
                 const res = response.data;
@@ -159,7 +195,6 @@ export default function ManageSong() {
             })
             .catch(function (error) {
                 // console.log(error);
-                setSongErrorExists(true);
                 setErrorMsg("Something wrong with the server");
             });
 
@@ -172,33 +207,36 @@ export default function ManageSong() {
     }
 
     const listItems = currentTableData.map((song) => {
-        if (editingId === song.id) {
+        if (editingId === song.song_id) {
             return (
                 <tr>
                     <td><input id="songTitle" name="Title" className='border-2 rounded-lg border-black p-1 mb-8' value={formData.Title} onChange={handleChange} type=" text" placeholder='Enter song Title' /></td>
-                    <td>{song.Singer_id}</td>
+                    <td>{song.penyanyi_id}</td>
                     <td><input id="songAudio" name='songAudio' className='border-2 rounded-lg border-black p-1 mb-8' type="file" onChange={handleFileChange} placeholder='Enter song audio path' /></td>
                     <td>
-                        <button className='editButton' type='submit' onClick={(e) => { handleSave(song.id) }}>Save</button>
-                        <button className='deleteButton' type='submit' onClick={(e) => { handleDelete(song.id) }}>Delete</button>
+                        <button className='editButton' type='submit' onClick={(e) => {
+                            handleSave(e, song.id);
+                        }}>Save</button>
+                        <button className='deleteButton' type='submit' onClick={(e) => { handleDelete(song.song_id) }}>Delete</button>
                     </td>
                 </tr>)
         }
         else {
             return (
                 <tr>
-                    <td>{song.Title}</td>
-                    <td>{song.Singer_id}</td>
+                    <td>{song.judul}</td>
+                    <td>{song.penyanyi_id}</td>
                     <td>{song.audio_path}</td>
                     <td>
-                        <button className='editButton' type='submit' onClick={(e) => { handleEdit(song.id) }}>Edit</button>
-                        <button className='deleteButton' type='submit' onClick={(e) => { handleDelete(song.id) }}>Delete</button>
+                        <button className='editButton' type='submit' onClick={(e) => { handleEdit(song.song_id) }}>Edit</button>
+                        <button className='deleteButton' type='submit' onClick={(e) => { handleDelete(song.song_id) }}>Delete</button>
                     </td>
                 </tr>)
         }
     })
 
-    return (
+    return !data ? <></> : (
+
         <div>
             <table>
                 <tr>

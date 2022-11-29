@@ -7,7 +7,7 @@
         height: 32px;
         text-align: center;
         margin: auto 4px;
-        color: rgba(0, 0, 0, 0.87);
+        color: white;
         display: flex;
         box-sizing: border-box;
         align-items: center;
@@ -23,12 +23,12 @@
         }
 
         &:hover {
-            background-color: rgba(0, 0, 0, 0.04);
+            background-color: cyan;
             cursor: pointer;
         }
 
         &.selected {
-            background-color: rgba(0, 0, 0, 0.08);
+            background-color: green;
         }
 
         .arrow {
@@ -42,6 +42,7 @@
                 height: 0.4em;
                 border-right: 0.12em solid rgba(0, 0, 0, 0.87);
                 border-top: 0.12em solid rgba(0, 0, 0, 0.87);
+                color: white;
             }
 
             &.left {

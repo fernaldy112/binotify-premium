@@ -28,14 +28,12 @@ const route = [
   },
   {
     path: "music",
-    element: <></>,
-    path: "addSong",
     element: <SongPage />,
   },
-  {
-    path: "manageSong",
-    element: <ManageSong />,
-  },
+  // {
+  //   path: "music",
+  //   element: <ManageSong />,
+  // },
 ];
 
 function App() {
