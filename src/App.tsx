@@ -5,6 +5,9 @@ import Header from "./components/Header";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Home from "./components/Home";
+import SongPage from "./components/Song";
+import ManageSong from "./components/List";
+// import Table from './components/Table';
 
 const route = [
   {
@@ -26,6 +29,12 @@ const route = [
   {
     path: "music",
     element: <></>,
+    path: "addSong",
+    element: <SongPage />,
+  },
+  {
+    path: "manageSong",
+    element: <ManageSong />,
   },
 ];
 
