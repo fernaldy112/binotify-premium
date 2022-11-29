@@ -1,22 +1,45 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import axios from "axios";
 
 
 export default function ManageSong() {
-    const [data, setSong] = useState([
-        // TODO: READ DATA DARI DB
-        {
-            id: 1,
-            Title: "Anjay",
-            Singer_id: 10,
-            audio_path: "hehe",
-        },
-        {
-            id: 2,
-            Title: "Turu",
-            Singer_id: 1,
-            audio_path: "hehe",
-        },
-    ])
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await axios.get(
+                    `https://api.github.com/users/eunit99/repos`
+                );
+                setData(response.data);
+                setError(null);
+                console.log(data);
+            } catch (err) {
+                setError(err.message);
+                setData(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        getData();
+    }, [loading]);
+    // const [data, setSong] = useState([
+    //     // TODO: READ DATA DARI DB
+    //     {
+    //         id: 1,
+    //         Title: "Anjay",
+    //         Singer_id: 10,
+    //         audio_path: "hehe",
+    //     },
+    //     {
+    //         id: 2,
+    //         Title: "Turu",
+    //         Singer_id: 1,
+    //         audio_path: "hehe",
+    //     },
+    // ])
     const [file, setFile] = useState<File>();
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
