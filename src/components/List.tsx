@@ -1,6 +1,8 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, useState, useEffect, useMemo } from "react";
+import Pagination from './Pagination';
 import axios from "axios";
 
+let PageSize = 10;
 
 export default function ManageSong() {
     const [data, setData] = useState(null);
@@ -11,7 +13,7 @@ export default function ManageSong() {
         const getData = async () => {
             try {
                 const response = await axios.get(
-                    `https://api.github.com/users/eunit99/repos`
+                    `http://localhost:8081/song/id`
                 );
                 setData(response.data);
                 setError(null);
@@ -40,6 +42,15 @@ export default function ManageSong() {
     //         audio_path: "hehe",
     //     },
     // ])
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const currentTableData = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return data.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage]);
+
     const [file, setFile] = useState<File>();
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -135,6 +146,13 @@ export default function ManageSong() {
                 </tr>
                 {listItems}
             </table>
+            <Pagination
+                className="pagination-bar"
+                currentPage={currentPage}
+                totalCount={data.length}
+                pageSize={PageSize}
+                onPageChange={(page) => setCurrentPage(page)}
+            />
         </div>
     );
 }

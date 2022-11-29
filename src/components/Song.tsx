@@ -7,7 +7,6 @@ const SongPage = () => {
     const [songErrorExists, setSongErrorExists] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
 
-
     const [formData, setFormData] = useState({
         Title: "",
         singer_id: "",
@@ -74,6 +73,7 @@ const SongPage = () => {
                 setSongErrorExists(true);
                 setErrorMsg("Something wrong with the server");
             });
+        setFormData({ Title: "", singer_id: "", audio_path: "" });
 
     }
 
