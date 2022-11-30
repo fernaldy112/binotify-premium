@@ -140,8 +140,8 @@ export default function ManageSong() {
             <input
               id="songTitle"
               name="Title"
-              className="border-2 rounded-lg border-black p-1 mb-8"
-              value={formData.Title}
+              className="border-2 rounded-lg border-black p-1 mb-8 text-black"
+              value={song.judul}
               onChange={handleChange}
               type=" text"
               placeholder="Enter song Title"
@@ -155,8 +155,7 @@ export default function ManageSong() {
               className="border-2 rounded-lg border-black p-1 mb-8"
               type="file"
               onChange={handleFileChange}
-              placeholder="Enter song audio path"
-            />
+              placeholder="Enter song audio path" />
           </td>
           <td>
             <button

@@ -87,3 +87,7 @@ td {
   font-size: 16px;
   border: 1px;
 }
+
+input {
+  color: black;
+}

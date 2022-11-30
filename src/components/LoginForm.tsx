@@ -72,11 +72,10 @@ const LoginForm = () => {
             Binotify Premium
           </h2>
           <p
-            className={`${
-              loginErrorExists
-                ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4"
-                : ""
-            }`}
+            className={`${loginErrorExists
+              ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4"
+              : ""
+              }`}
           >
             {errorMsg}
           </p>
@@ -87,7 +86,7 @@ const LoginForm = () => {
             <input
               id="loginCred"
               name="loginCred"
-              className="border-2 rounded-lg border-black p-1 w-full mb-8"
+              className="border-2 rounded-lg border-black p-1 w-full mb-8 text-black"
               type="text"
               placeholder="Enter your email/username"
               onChange={credInputHandler}
@@ -101,7 +100,7 @@ const LoginForm = () => {
             <input
               id="loginPass"
               name="loginPass"
-              className="border-2 rounded-lg border-black p-1 w-full mb-8"
+              className="border-2 rounded-lg border-black p-1 w-full mb-8 text-black"
               type="password"
               placeholder="Enter your password"
               onChange={passInputHandler}

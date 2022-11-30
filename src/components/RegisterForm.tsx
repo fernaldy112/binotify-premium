@@ -144,14 +144,13 @@ const RegisterForm = () => {
             Binotify Premium
           </h2>
           <p
-            className={`${
-              emailErrorExists ||
+            className={`${emailErrorExists ||
               usernameErrorExists ||
               passwordErrorExists ||
               serverErrorExists
-                ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4"
-                : ""
-            }`}
+              ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4"
+              : ""
+              }`}
           >
             {errorMsg}
           </p>
@@ -162,7 +161,7 @@ const RegisterForm = () => {
             <input
               id="registerName"
               name="registerName"
-              className="border-2 rounded-lg border-black p-1 w-full mb-8"
+              className="border-2 rounded-lg border-black p-1 w-full mb-8 text-black"
               type="text"
               placeholder="Enter your name"
               onChange={nameInputHandler}
@@ -179,9 +178,8 @@ const RegisterForm = () => {
             <input
               id="registerUsername"
               name="registerUsername"
-              className={`border-2 rounded-lg p-1 w-full mb-8 ${
-                usernameErrorExists ? "border-rose-600" : "border-black"
-              }`}
+              className={`border-2 rounded-lg p-1 w-full mb-8 text-black ${usernameErrorExists ? "border-rose-600" : "border-black"
+                }`}
               type="text"
               placeholder="Enter your username"
               onChange={usernameInputHandler}
@@ -195,9 +193,8 @@ const RegisterForm = () => {
             <input
               id="registerEmail"
               name="registerEmail"
-              className={`border-2 rounded-lg p-1 w-full mb-8 ${
-                emailErrorExists ? "border-rose-600" : "border-black"
-              }`}
+              className={`border-2 rounded-lg p-1 w-full mb-8 text-black ${emailErrorExists ? "border-rose-600" : "border-black"
+                }`}
               type="text"
               placeholder="Enter your email"
               onChange={emailInputHandler}
@@ -211,9 +208,8 @@ const RegisterForm = () => {
             <input
               id="registerPass"
               name="registerPass"
-              className={`border-2 rounded-lg p-1 w-full mb-8 ${
-                passwordErrorExists ? "border-rose-600" : "border-black"
-              }`}
+              className={`border-2 rounded-lg p-1 w-full mb-8 text-black ${passwordErrorExists ? "border-rose-600" : "border-black"
+                }`}
               type="password"
               placeholder="Enter your password"
               onChange={passwordInputHandler}
@@ -227,9 +223,8 @@ const RegisterForm = () => {
             <input
               id="registerPass2"
               name="registerPass2"
-              className={`border-2 rounded-lg p-1 w-full mb-8 ${
-                passwordErrorExists ? "border-rose-600" : "border-black"
-              }`}
+              className={`border-2 rounded-lg p-1 w-full mb-8 text-black ${passwordErrorExists ? "border-rose-600" : "border-black"
+                }`}
               type="password"
               placeholder="Confirm your password"
               onChange={password2InputHandler}
