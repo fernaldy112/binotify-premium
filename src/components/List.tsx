@@ -143,7 +143,7 @@ export default function ManageSong() {
               id="songTitle"
               name="Title"
               className="border-2 rounded-lg border-black p-1 mb-8 text-black"
-              value={song.judul}
+              value={formData.Title}
               onChange={handleChange}
               type=" text"
               placeholder="Enter song Title"
