@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  premi:
+    build: .
+    hostname: premi
+    command: npm run serve
+    ports:
+      - "8084:80"
+    volumes:
+      - "./:/usr/src/binotify-premium"
+    networks:
+      - binotify
+
+networks:
+  binotify:
+    external: true
