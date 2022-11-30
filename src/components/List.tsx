@@ -115,6 +115,8 @@ export default function ManageSong() {
         const res = response.data;
         if (res.valid) {
           setErrorMsg("");
+          dataMirror!.splice(value, 1);
+          setData(dataMirror);
         } else {
           setErrorMsg(res.note);
         }
@@ -214,7 +216,7 @@ export default function ManageSong() {
     <></>
   ) : (
     <div>
-      <table>
+      <table className="border-primary">
         <tr>
           <th>Title</th>
           <th>Singer ID</th>

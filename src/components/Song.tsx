@@ -78,7 +78,7 @@ const SongPage = () => {
 
     return (
         <div className="w-full max-w-xl flex flex-col justify-center mx-auto my-10">
-            <div className="border-2 border-black rounded-lg">
+            <div className="border-2 border-primary rounded-lg">
                 <form
                     id="insertSongForm"
                     onSubmit={handleSubmit}
@@ -133,7 +133,7 @@ const SongPage = () => {
                         <input
                             id="songAudio"
                             name="songAudio"
-                            className="border-2 rounded-lg border-black p-1 w-full mb-8"
+                            className="border-2 rounded-lg border-white p-1 w-full mb-8"
                             type="file"
                             onChange={handleFileChange}
                             placeholder="Enter song audio path"
@@ -142,14 +142,13 @@ const SongPage = () => {
                     </div>
 
                     <button
-                        className="border-2 rounded-lg border-black p-1 w-full max-w-[100px]"
+                        className="border-2 rounded-lg border-primary p-1 w-full max-w-[100px] hover:bg-primary hover:text-black"
                         type="submit"
                         onClick={handleUploadClick}
                     >
                         Insert Song
                     </button>
                 </form>
-                <hr />
             </div>
             <br></br>
         </div>
