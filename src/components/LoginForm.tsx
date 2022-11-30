@@ -61,7 +61,7 @@ const LoginForm = () => {
 
   return (
     <div className="h-screen w-full max-w-xl flex flex-col justify-center mx-auto">
-      <div className="border-2 border-black rounded-lg">
+      <div className="border-2 border-primary rounded-lg ">
         <form
           id="loginForm"
           className="p-10 flex flex-col items-center justify-items-stretch pb-6"
@@ -108,13 +108,13 @@ const LoginForm = () => {
             />
           </div>
           <button
-            className="border-2 rounded-lg border-black p-1 w-full max-w-[100px]"
+            className="border-2 rounded-lg border-primary p-1 w-full max-w-[100px] hover:bg-primary hover:text-black"
             type="submit"
           >
             Login
           </button>
         </form>
-        <hr />
+        <hr className="bg-primary"/>
         <RegisterRedirect />
       </div>
     </div>
