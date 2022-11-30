@@ -5,7 +5,8 @@ const app = express();
 
 app.use(express.static(BUILD_DIR));
 app.get("/*", (_, res) => {
-  res.sendFile(`${BUILD_DIR}/index.html`);
+  console.log(`${__dirname}/${BUILD_DIR}/index.html`);
+  res.sendFile(`${__dirname}/${BUILD_DIR}/index.html`);
 });
 
 app.listen(PORT);

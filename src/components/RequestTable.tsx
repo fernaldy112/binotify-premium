@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "./Button";
 import Table from "./Table";
+import token from "./store/token";
 
 interface RequestTableProps {
   params?: {
@@ -66,6 +67,7 @@ export default function RequestTable() {
     const endpoint = status == Status.ACCEPTED ? "accept" : "reject";
     xhr.open("POST", `${API_URL}/subscriptions/${endpoint}`);
     xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Authorization", `Bearer ${token.value}`);
     xhr.onload = () => {
       setData((oldData) => {
         oldData![index][2] =
@@ -95,7 +97,11 @@ export default function RequestTable() {
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL;
-    fetch(`${API_URL}/subscriptions?page=${params?.page || 1}`)
+    fetch(`${API_URL}/subscriptions?page=${params?.page || 1}`, {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
       .then((res) => res.json())
       .then(
         (res: SubscriptionResponse) => {
