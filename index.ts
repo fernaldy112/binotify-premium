@@ -5,7 +5,6 @@ const app = express();
 
 app.use(express.static(BUILD_DIR));
 app.get("/*", (_, res) => {
-  console.log(`${__dirname}/${BUILD_DIR}/index.html`);
   res.sendFile(`${__dirname}/${BUILD_DIR}/index.html`);
 });
 

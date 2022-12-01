@@ -24,7 +24,7 @@ export default function Table(props: TableProps) {
   const { headers, data } = props;
 
   return (
-    <table>
+    <table className="request-table">
       <thead>
         <tr>
           {headers.map((header) => (

@@ -8,7 +8,7 @@ const token = {
     this.value = "";
   },
   exists() {
-    return this.value !== "";
+    return this.value.length !== 0;
   },
   setAdmin(admin: boolean) {
     this.admin = admin;

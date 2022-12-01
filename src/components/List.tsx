@@ -2,12 +2,12 @@ import React, {
   ChangeEvent,
   useState,
   useEffect,
-  useMemo,
   ReactNode,
 } from "react";
 import Pagination from "./Pagination";
 import axios from "axios";
 import token from "./store/token";
+import { Navigate, useNavigate } from "react-router-dom";
 
 let PageSize = 5;
 
@@ -16,7 +16,15 @@ export default function ManageSong() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [, updateState] = React.useState<any>();
   let dataMirror: ReactNode[][] | null = null;
+  const navigate = useNavigate();
+
+  if (!token.exists()) {
+    return <Navigate to="/login" />
+  }
+
+  const forceUpdate = React.useCallback(() => updateState({}), []);
 
   useEffect(() => {
     const getData = async () => {
@@ -29,7 +37,6 @@ export default function ManageSong() {
         setData(response.data);
         dataMirror = response.data;
         setError(null);
-        console.log(data);
       } catch (error: any) {
         setError(error.message);
         setData(null);
@@ -60,31 +67,36 @@ export default function ManageSong() {
     audio_path: "",
   });
 
-  function handleSave(e: any, value: number) {
-    if (!file) {
-      return;
-    }
+  function handleSave(e: any, value: number, index: number) {
 
     e.preventDefault();
     alert("Song will be edited");
-    const data = new FormData();
-    data.append("judul", formData.Title);
-    data.append("audioFile", file);
+    const newSongDetails = new FormData();
+    
+    if (formData.Title) {
+      newSongDetails.append("judul", formData.Title);
+    }
+
+    if (file) {
+      newSongDetails.append("audioFile", file);
+    }
+
     axios({
       method: "put",
       url: `http://localhost:8081/song/${value}`,
-      data,
+      data: newSongDetails,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token.value}`,
       },
     })
       .then(function (response) {
-        const res = response.data;
-        if (res.valid) {
+        if (response.status === 200) {
           setErrorMsg("");
+          data![index].judul = formData.Title ? formData.Title : data![index].judul;
+          setData((_: any) => [...data]);
         } else {
-          setErrorMsg(res.note);
+          navigate("/login");
         }
       })
       .catch(function (error) {
@@ -101,8 +113,8 @@ export default function ManageSong() {
     setEditingId(value);
   }
 
-  function handleDelete(value: number) {
-    console.log(value);
+  function handleDelete(value: number, index: number) {
+    alert("Song is deleted");
     axios({
       method: "delete",
       url: `http://localhost:8081/song/${value}`,
@@ -112,17 +124,17 @@ export default function ManageSong() {
       },
     })
       .then(function (response) {
-        const res = response.data;
-        if (res.valid) {
+        
+        if (response.status === 200) {
           setErrorMsg("");
-          dataMirror!.splice(value, 1);
-          setData(dataMirror);
+          data!.splice(index, 1);
+          setData((_: any)=> [...data!]);
+          forceUpdate();
         } else {
-          setErrorMsg(res.note);
+          navigate("/login");
         }
       })
       .catch(function (error) {
-        // console.log(error);
         setErrorMsg("Something wrong with the server");
       });
   }
@@ -134,7 +146,7 @@ export default function ManageSong() {
     setFormData(data);
   }
 
-  const listItems = currentTableData.map((song: any) => {
+  const listItems = (data? data!.slice(firstPageIndex, lastPageIndex): []).map((song: any, index: number) => {
     if (editingId === song.song_id) {
       return (
         <tr>
@@ -146,7 +158,7 @@ export default function ManageSong() {
               value={formData.Title}
               onChange={handleChange}
               type=" text"
-              placeholder="Enter song Title"
+              placeholder={song.judul}
             />
           </td>
           <td>{song.penyanyi_id}</td>
@@ -164,7 +176,7 @@ export default function ManageSong() {
               className="editButton"
               type="submit"
               onClick={(e) => {
-                handleSave(e, song.song_id);
+                handleSave(e, song.song_id, index);
               }}
             >
               Save
@@ -173,7 +185,7 @@ export default function ManageSong() {
               className="deleteButton"
               type="submit"
               onClick={(e) => {
-                handleDelete(song.song_id);
+                handleDelete(song.song_id, index);
               }}
             >
               Delete
@@ -201,7 +213,7 @@ export default function ManageSong() {
               className="deleteButton"
               type="submit"
               onClick={(e) => {
-                handleDelete(song.song_id);
+                handleDelete(song.song_id, index);
               }}
             >
               Delete
@@ -212,10 +224,11 @@ export default function ManageSong() {
     }
   });
 
-  return !data ? (
-    <></>
+  return (!data || data.length === 0) ? (
+    <div><p className="text-lg">You don't have any Song</p></div>
   ) : (
-    <div>
+    
+      <div>
       <table className="border-primary">
         <tr>
           <th>Title</th>
@@ -233,5 +246,7 @@ export default function ManageSong() {
         onPageChange={(page: number) => setCurrentPage(page)}
       />
     </div>
+    
+    
   );
 }

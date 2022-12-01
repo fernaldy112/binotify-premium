@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router-dom";
 import Button from "./Button";
 import Table from "./Table";
 import token from "./store/token";
@@ -29,6 +29,10 @@ export default function RequestTable() {
   const params = useParams();
   const navigate = useNavigate();
   let dataMirror: ReactNode[][] | null = null;
+
+  if (!token.exists()) {
+    return <Navigate to="/login" />
+  }
 
   const headers = ["Creator ID", "Subscriber ID", ""];
 
@@ -145,6 +149,8 @@ export default function RequestTable() {
     return <div>Error</div>;
   } else if (!data) {
     return <div>Loading...</div>;
+  } else if (data.length === 0) {
+    return <div><p className="text-lg">There are no subscription requests at the moment</p></div>
   } else {
     return (
       <div className="flex flex-col gap-6">

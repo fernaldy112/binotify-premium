@@ -1,11 +1,18 @@
 import React, { ChangeEvent, useState } from "react";
 import axios from "axios";
 import token from "./store/token";
+import { useNavigate, Navigate } from "react-router-dom";
+
 
 const SongPage = () => {
     const [file, setFile] = useState<File>();
     const [songErrorExists, setSongErrorExists] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const navigate = useNavigate();
+
+    if (!token.exists()) {
+        return <Navigate to="/login" />;
+    }
 
     const [formData, setFormData] = useState({
         judul: "",
@@ -24,31 +31,18 @@ const SongPage = () => {
         }
     };
 
-    const handleUploadClick = () => {
-        if (!file) {
-            return;
-        }
-
-        fetch("https://httpbin.org/post", {
-            method: "POST",
-            body: file,
-            headers: {
-                "content-type": file.type,
-                "content-length": `${file.size}`,
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err));
-    };
-
     function handleSubmit(e: any) {
         e.preventDefault();
-        alert("New Song will be added");
+        if (!formData.judul || !file){
+            setSongErrorExists(true);
+            setErrorMsg("Input may not be empty");
+            return;
+        }
+        setSongErrorExists(false);
         const data = new FormData();
         data.append("judul", formData.judul);
         data.append("audioFile", file!);
-
+        
         axios({
             method: "post",
             url: "http://localhost:8081/song",
@@ -60,10 +54,12 @@ const SongPage = () => {
         })
             .then(function (response) {
                 const res = response.data;
-                if (res.valid) {
+                if (response.status === 200) {
                     setErrorMsg("");
+                    navigate("/my-music");
                 } else {
                     setErrorMsg(res.note);
+                    navigate("/login");
                 }
             })
             .catch(function (error) {
@@ -89,10 +85,11 @@ const SongPage = () => {
                         Song
                     </h2>
                     <p
-                        className={`${songErrorExists
-                            ? "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4"
+                        className={`${
+                            songErrorExists ?
+                            "bg-rose-600 text-white w-full text-center h-10 leading-10 rounded-md mb-4"
                             : ""
-                            }`}
+                        }`}
                     >
                         {errorMsg}
                     </p>
@@ -129,7 +126,6 @@ const SongPage = () => {
                     <button
                         className="border-2 rounded-lg border-primary p-1 w-full max-w-[100px] hover:bg-primary hover:text-black"
                         type="submit"
-                        onClick={handleUploadClick}
                     >
                         Insert Song
                     </button>

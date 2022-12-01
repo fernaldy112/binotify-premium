@@ -44,6 +44,8 @@ const LoginForm = () => {
           token.setAdmin(data.isAdmin);
 
           navigate(token.isAdmin() ? "/request/1" : "/music");
+        } else {
+            navigate("/login");
         }
       })
       .catch(function (error) {
