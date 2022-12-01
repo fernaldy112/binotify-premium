@@ -45,34 +45,39 @@ const SongPage = () => {
     function handleSubmit(e: any) {
         e.preventDefault();
         alert("New Song will be added");
-        const data = new FormData();
-        data.append("judul", formData.judul);
-        data.append("audioFile", file!);
+        if (formData.judul === "" || formData.audio_path === "") {
+            alert("all field must be input!")
+        }
+        else {
+            const data = new FormData();
+            data.append("judul", formData.judul);
+            data.append("audioFile", file!);
 
-        axios({
-            method: "post",
-            url: "http://localhost:8081/song",
-            data,
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${token.value}`,
-            },
-        })
-            .then(function (response) {
-                const res = response.data;
-                if (res.valid) {
-                    setErrorMsg("");
-                } else {
-                    setErrorMsg(res.note);
-                }
+            axios({
+                method: "post",
+                url: "http://localhost:8081/song",
+                data,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token.value}`,
+                },
             })
-            .catch(function (error) {
-                // console.log(error);
-                setSongErrorExists(true);
-                setErrorMsg("Something wrong with the server");
-            });
+                .then(function (response) {
+                    const res = response.data;
+                    if (res.valid) {
+                        setErrorMsg("");
+                    } else {
+                        setErrorMsg(res.note);
+                    }
+                })
+                .catch(function (error) {
+                    // console.log(error);
+                    setSongErrorExists(true);
+                    setErrorMsg("Something wrong with the server");
+                });
 
-        setFormData({ judul: "", audio_path: "" });
+            setFormData({ judul: "", audio_path: "" });
+        }
     }
 
     return (

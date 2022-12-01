@@ -102,7 +102,7 @@ export default function ManageSong() {
   }
 
   function handleDelete(value: number) {
-    console.log(value);
+    alert("Song is deleted");
     axios({
       method: "delete",
       url: `http://localhost:8081/song/${value}`,
@@ -143,7 +143,7 @@ export default function ManageSong() {
               id="songTitle"
               name="Title"
               className="border-2 rounded-lg border-black p-1 mb-8 text-black"
-              value={formData.Title}
+              value={song.judul}
               onChange={handleChange}
               type=" text"
               placeholder="Enter song Title"
@@ -156,6 +156,7 @@ export default function ManageSong() {
               name="songAudio"
               className="border-2 rounded-lg border-black p-1 mb-8"
               type="file"
+              value={song.audio_path}
               onChange={handleFileChange}
               placeholder="Enter song audio path" />
           </td>
