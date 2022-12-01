@@ -9,7 +9,6 @@ const SongPage = () => {
 
     const [formData, setFormData] = useState({
         judul: "",
-        singer_id: "",
         audio_path: "",
     });
 
@@ -73,7 +72,7 @@ const SongPage = () => {
                 setErrorMsg("Something wrong with the server");
             });
 
-        setFormData({ judul: "", singer_id: "", audio_path: "" });
+        setFormData({ judul: "", audio_path: "" });
     }
 
     return (
@@ -110,20 +109,6 @@ const SongPage = () => {
                             type=" text"
                             placeholder="Enter song judul"
 
-                        />
-                    </div>
-                    <div className="w-full">
-                        <label htmlFor="singerID" className="w-full text-left block">
-                            Singer ID
-                        </label>
-                        <input
-                            id="singer_id"
-                            name="singer_id"
-                            className="border-2 rounded-lg border-black p-1 w-full mb-8 text-black"
-                            value={formData.singer_id}
-                            onChange={handleChange}
-                            type=" text"
-                            placeholder="Enter Singer ID"
                         />
                     </div>
                     <div className="w-full">
